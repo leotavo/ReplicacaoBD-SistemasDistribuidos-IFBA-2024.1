@@ -1,84 +1,51 @@
 package main;
-
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-public class GroupLeader extends UnicastRemoteObject implements GroupMemberInterface {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private Map<Integer, GroupMemberInterface> members;
-    private int leaderId;
+public class GroupLeader extends UnicastRemoteObject implements GroupLeaderInterface {
+    private List<MemberInterface> members;
 
-
-	GroupLeader() throws RemoteException {
-		super();
-		// TODO Auto-generated constructor stub
-		this.leaderId = 0;
-		this.members = new HashMap<>();
-		
-		// implementar configuração registro RMI para que um objeto remoto possa ser acessado por clientes
-		
-		
-		System.out.println("Líder inicializado. Aguardando conexões dos membros.");
-	}
-
-	@Override
-	public void receiveSQLCommand(String sqlCommand) throws RemoteException {
-		// TODO Auto-generated method stub
-		System.out.println("Líder recebendo comando SQL: " + sqlCommand);
-		
-		// distribuir  comandos para o grupo
-		// Para cada membro do grupo, println("Enviando comando SQL para o membro idMembro")
-		// verificar a lógica da execução em ordem por id
-
-	}
-
-	@Override
-	public void joinGroup(int memberId) throws RemoteException {
-		// TODO Auto-generated method stub
-		
-		// logica para que um novo membro se junte ao grupo no sistema distribuído
-		
-		System.out.println("Membro " + memberId + "adicionado ao grupo.");
-		
-
-	}
-
-	@Override
-	public void leaveGroup(int memberId) throws RemoteException {
-		// TODO Auto-generated method stub
-		
-		// logica para remover um membro do grupo: heartbeat / pingpong / timeout
-		
-		System.out.println("Membro " + memberId + "removido do grupo.");
-
-	}
-
-	
-	
-    public void detectFailures() {
-        // Implementar lógica para detecção de falhas de membros. usando ping por exemplo
-    	
-    	// para cada membro do grupo: println("ping: membro id"), testar member.ping,  exceção: println("Membro idMebro falhou e será removido do grupo")/
+    public GroupLeader() throws RemoteException {
+        members = new ArrayList<>();
     }
-    
+
     @Override
-	public boolean ping() throws RemoteException {
-		// TODO Auto-generated method stub
-		return true;
-	}
-    
-    public static void main(String[] args) {
-    	// inicializa instância do líder
-    	// println("Líder criado")
+    public synchronized void executeSQL(String sql) throws RemoteException {
+        System.out.println("Executando SQL no grupo: " + sql);
+        for (MemberInterface member : members) {
+            try {
+                member.receiveSQL(sql);
+            } catch (RemoteException e) {
+                System.err.println("Erro ao enviar SQL para membro: " + member.getMemberId());
+                removeMember(member); // Remove membro com falha
+            }
+        }
     }
 
-	
+    @Override
+    public synchronized void addMember(MemberInterface member) throws RemoteException {
+        members.add(member);
+        System.out.println("Novo membro adicionado: " + member.getMemberId());
+    }
 
+    @Override
+    public synchronized void removeMember(MemberInterface member) throws RemoteException {
+        members.remove(member);
+        System.out.println("Membro removido: " + member.getMemberId());
+    }
+
+    // Método para detectar falhas (simples verificação de ping)
+    public void checkMembers() throws RemoteException {
+        for (MemberInterface member : new ArrayList<>(members)) {
+            try {
+                member.getMemberId();  // Apenas uma chamada remota para verificar a conexão
+            } catch (RemoteException e) {
+                System.out.println("Falha detectada no membro: " + member.getMemberId());
+                removeMember(member);
+            }
+        }
+    }
 
 }
