@@ -6,9 +6,12 @@ import java.util.List;
 
 public class GroupLeader extends UnicastRemoteObject implements GroupLeaderInterface {
     private List<MemberInterface> members;
-
+    private int leaderId; 
+    
     public GroupLeader() throws RemoteException {
-        members = new ArrayList<>();
+       this.members = new ArrayList<>();
+       this.leaderId = 0;
+		
     }
 
     @Override
