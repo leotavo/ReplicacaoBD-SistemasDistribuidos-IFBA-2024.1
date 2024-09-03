@@ -1,0 +1,95 @@
+Testando a solução:
+
+
+Criar uma base de dados relacional para cada membro do grupo
+
+Compilando as classes necessárias
+javac *.java
+
+
+Iniciar o líder do grupo
+java GroupLeader
+obs: endereço está como localhost e porta 1099. alterar no código caso necessário
+
+Iniciar os membros do grupo
+java GroupMember 1 <url base de dados>
+java GroupMember 2 <url base de dados>
+java GroupMember 3 <url base de dados>
+
+Enviar comando SQL
+java SQLClient
+obs: após execução do SQLClient informe no terminal o comando SQL
+
+Verifique se o comando SQL é recebido pelo líder e executado por todos os membros.
+
+Solicitar saida de um membro
+java RemoveMember 2
+
+
+Simular falha
+Interrompa o processo de um membro
+Depois de simular a falha, observe se:
+
+O líder detecta a falha e remove o membro da lista de membros.
+
+envie novos comandos SQL e verifique se:
+O líder continua a processar comandos SQL e envia-os apenas aos membros ativos.
+
+
+ Verificar Logs e Mensagens
+ 
+No terminal do líder:
+Verifique se há mensagens indicando que o membro foi removido.
+Certifique-se de que os comandos SQL foram executados pelos membros ativos.
+Verifique o terminal do líder para ver se a mensagem indicando a falha do membro foi impressa e se o membro foi removido.
+
+Nos terminais dos membros restantes:
+Verifique se eles receberam e executaram os comandos SQL conforme esperado.
+
+Nos terminais dos membros que falharam ou foram removidos
+O membro não deve mais responder aos comandos.
+
+
+O erro java.rmi.server.ExportException: Port already in use: 1099 indica que a porta 1099 já está sendo usada por outro processo. Isso ocorre porque a porta 1099 é a porta padrão usada pelo Registro RMI (Java Remote Method Invocation Registry), e, aparentemente, ela já está em uso.
+
+Soluções Possíveis
+Mudar a Porta do Registro RMI: Você pode escolher outra porta que não esteja em uso.
+
+Verificar se o Registro RMI já está Rodando: Pode ser que o registro RMI já esteja ativo em outro terminal ou processo.
+
+Encerrar o Processo que Está Usando a Porta 1099: Se outro processo está ocupando essa porta e você não precisa dele, pode encerrá-lo.
+
+Opção 1: Mudar a Porta do Registro RMI
+Você pode escolher outra porta que não esteja em uso. Por exemplo, usar a porta 1100 em vez de 1099. Modifique o código para usar uma porta diferente:
+
+java
+Copiar código
+Registry registry = LocateRegistry.createRegistry(1100);
+registry.rebind("GroupLeader", this);
+E no cliente, certifique-se de se conectar usando a mesma porta:
+
+java
+Copiar código
+Registry registry = LocateRegistry.getRegistry("localhost", 1100);
+GroupMemberInterface groupLeader = (GroupMemberInterface) registry.lookup("GroupLeader");
+Opção 2: Verificar se o Registro RMI já está Rodando
+Você pode verificar se o registro RMI já está em execução na porta 1099. Se estiver, não é necessário criá-lo novamente. Tente se conectar ao registro existente em vez de criar um novo:
+
+java
+Copiar código
+try {
+    // Tenta se conectar ao registro existente
+    Registry registry = LocateRegistry.getRegistry(1099);
+    registry.rebind("GroupLeader", this);
+} catch (RemoteException e) {
+    e.printStackTrace();
+}
+
+
+Encerrar o Processo que Está Usando a Porta
+Se a porta 1099 estiver em uso por outro processo, você pode encerrá-lo. 
+Encontre o Processo na Porta 1099:
+cmd
+netstat -ano | findstr :1099
+Matar o Processo:
+taskkill /PID <PID> /F
