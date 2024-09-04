@@ -1,15 +1,26 @@
 package main;
 
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
 public class RemoveMember {
 	public static void main(String[] args) {
-		
-		int memberId = Integer.parseInt(args[0]);
-		
-		
-		// obter uma referência do objeto remoto GroupLeader para remover um membro do grupo
-		
-		
-		System.out.println("Solicitação de remoção enviada para o membro " + memberId);
-	}
+		if (args.length != 1) {
+			System.out.println("Uso: java RemoveMember <memberId>");
+			System.exit(1);
+		}
 
+		int memberId = Integer.parseInt(args[0]);
+
+		try {
+			Registry registry = LocateRegistry.getRegistry();
+			GroupMemberInterface leader = (GroupMemberInterface) registry.lookup("GroupLeader");
+
+			leader.leaveGroup(memberId);
+			System.out.println("Solicitação de remoção enviada para o membro " + memberId);
+		} catch (Exception e) {
+			System.err.println("Erro ao remover membro: " + e.getMessage());
+			e.printStackTrace();
+		}
+	}
 }
