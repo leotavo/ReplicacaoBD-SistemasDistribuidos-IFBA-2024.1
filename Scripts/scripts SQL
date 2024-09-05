@@ -1,0 +1,18 @@
+
+// banco para membro id=1
+CREATE DATABASE disciplinasDB1;
+
+// banco para membro id=2
+CREATE DATABASE disciplinasDB2;
+
+// banco para membro id=3
+CREATE DATABASE disciplinasDB3;
+
+
+para cada banco
+CREATE TABLE disciplinas (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    codigo  VARCHAR(10) noT NULL
+);
+

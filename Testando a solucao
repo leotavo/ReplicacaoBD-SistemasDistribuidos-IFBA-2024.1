@@ -1,0 +1,53 @@
+Testando a solução:
+
+Criar um banco de dados relacional para o líder e para cada membro do grupo
+
+
+
+Para registro rmi o endereço está como localhost e porta 1099, alterar antes de compilar caso necessário 
+
+Compilar as classes necessárias (NA PASTA SRC)
+javac *.java
+
+(NA PASTA BIN)
+Inicializar o líder do grupo
+java GroupLeader <url base de dados do líder> usuario senha
+exemplo: java GroupLeader "jdbc:postgresql://localhost:5432/disciplinasdb" postgres 45985764
+
+Inicializar os membros do grupo
+java GroupMember id <url base de dados do membro 1> usuario senha
+exemplo: 
+java GroupMember 1 "jdbc:postgresql://localhost:5432/disciplinasdb1" postgres 45985764
+java GroupMember 2 "jdbc:postgresql://localhost:5432/disciplinasdb2" postgres 45985764
+java GroupMember 3 "jdbc:postgresql://localhost:5432/disciplinasdb3" postgres 45985764
+
+ou compilar/rodar numa IDE com suporte à Java (exemplo Eclipse, intellij idea, etc.
+
+Rodar o cliente SQL para envio dos comandos
+
+java SQLClient
+Por favor, forneça o comando SQL a ser executado.
+(digitar o comando)
+
+- o líder retorna para o SQLCliente uma string com o conteúdo (comando SELECT) ou o número de linhas afetas (INSERT, UPDATE, DELETE)
+- após um comando de INSERT UPDATE OU DELETE, você pode executar um comando SELECT * FROM ... , para verificar se a tabela foi atualizada.
+
+Solicitar saida de um membro
+java RemoveMember <id>
+java RemoveMember 2  (remove o GroupMember2 do grupo)
+
+
+Simular falha
+- Interrompa o processo de um membro (na própria IDE, ou num terminal, comando kill)
+
+Envie novos comandos SQL e verifique se:
+O líder continua a processar comandos SQL e envia-os apenas aos membros ativos.
+- O líder detecta a falha e deve remover o membro da lista de membros.
+- no caso de um comando de atualização, o banco do membro removido não será alterado (FALTA TESTAR)
+
+
+
+
+
+
+

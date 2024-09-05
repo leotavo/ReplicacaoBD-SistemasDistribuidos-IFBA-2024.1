@@ -1,0 +1,17 @@
+"SELECT * FROM disciplinas;"
+
+"INSERT INTO disciplinas (nome, codigo) VALUES ('Matemática', 'MAT101');"
+"INSERT INTO disciplinas (nome, codigo) VALUES ('Programação', 'PRO202');"
+"INSERT INTO disciplinas (nome, codigo) VALUES ('Redes de Computadores', 'RED303');"
+
+"SELECT * FROM disciplinas;"
+
+"UPDATE disciplinas SET codigo = 'PRO204' WHERE nome = 'Programação';"
+
+"SELECT * FROM disciplinas;"
+
+"DELETE FROM disciplinas WHERE nome = 'Redes de Computadores';"
+
+"SELECT * FROM disciplinas;"
+
+"SELECT * FROM disciplinas WHERE nome = 'Programação' OR codigo = 'MAT101';"
