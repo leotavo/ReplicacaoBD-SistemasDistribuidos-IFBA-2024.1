@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"<Unnamed>","l":"GroupLeader"},{"p":"<Unnamed>","l":"GroupMember"},{"p":"<Unnamed>","l":"GroupMemberInterface"},{"p":"<Unnamed>","l":"QueryResult"},{"p":"<Unnamed>","l":"RemoveMember"},{"p":"<Unnamed>","l":"SQLClient"},{"p":"<Unnamed>","l":"SqlExecutor"}];updateSearchResults();
