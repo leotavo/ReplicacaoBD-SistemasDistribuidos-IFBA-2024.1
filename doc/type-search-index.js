@@ -1,1 +1,0 @@
-typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"main","l":"GroupLeader"},{"p":"main","l":"GroupMember"},{"p":"main","l":"GroupMemberInterface"},{"p":"main","l":"RemoveMember"},{"p":"main","l":"SQLClient"}];updateSearchResults();
